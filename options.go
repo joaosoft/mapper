@@ -1,6 +1,9 @@
 package mapper
 
-import logger "github.com/joaosoft/logger"
+import (
+	"github.com/joaosoft/go-manager"
+	logger "github.com/joaosoft/logger"
+)
 
 // MapperOption ...
 type MapperOption func(mapper *Mapper)
@@ -24,5 +27,12 @@ func WithLogger(logger logger.ILogger) MapperOption {
 func WithLogLevel(level logger.Level) MapperOption {
 	return func(mapper *Mapper) {
 		log.SetLevel(level)
+	}
+}
+
+// WithManager ...
+func WithManager(mgr *manager.Manager) MapperOption {
+	return func(dropbox *Mapper) {
+		dropbox.pm = mgr
 	}
 }
