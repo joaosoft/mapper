@@ -30,14 +30,28 @@ func convertToMap(obj interface{}, path string, mapping map[string]interface{}, 
 		}
 	}
 
+	if !value.CanInterface() {
+		return "", nil
+	}
+
 	switch value.Kind() {
 	case reflect.Struct:
+
+		if !value.CanInterface() {
+			return "", nil
+		}
+
 		path = addPoint(path)
 		var innerPath string
 		var len = value.NumField()
 		for i := 0; i < types.NumField(); i++ {
 			len--
 			nextValue := value.Field(i)
+
+			if !nextValue.CanInterface() {
+				return "", nil
+			}
+
 			newPath := fmt.Sprintf("%s%s", path, types.Field(i).Name)
 			tmp, _ := convertToMap(nextValue.Interface(), newPath, mapping, add)
 			if len > 0 {
@@ -57,6 +71,11 @@ func convertToMap(obj interface{}, path string, mapping map[string]interface{}, 
 		for i := 0; i < value.Len(); i++ {
 			len--
 			nextValue := value.Index(i)
+
+			if !nextValue.CanInterface() {
+				return "", nil
+			}
+
 			newPath := fmt.Sprintf("%s[%d]", path, i)
 			tmp, _ := convertToMap(nextValue.Interface(), newPath, mapping, add)
 			if len > 0 {
@@ -76,6 +95,11 @@ func convertToMap(obj interface{}, path string, mapping map[string]interface{}, 
 		for _, key := range value.MapKeys() {
 			len--
 			nextValue := value.MapIndex(key)
+
+			if !nextValue.CanInterface() {
+				return "", nil
+			}
+
 			newPath := fmt.Sprintf("%s{", path)
 			keyValue, _ := convertToMap(key.Interface(), "", mapping, false)
 			newPath += fmt.Sprintf("%s}", keyValue)
