@@ -32,10 +32,19 @@ func convertToString(obj interface{}, path string, spaces int, breaker string, p
 		}
 	}
 
+	if !value.CanInterface() {
+		return nil
+	}
+
 	switch value.Kind() {
 	case reflect.Struct:
 		for i := 0; i < types.NumField(); i++ {
 			nextValue := value.Field(i)
+
+			if !nextValue.CanInterface() {
+				return nil
+			}
+
 			newPath := fmt.Sprintf("%s%s", path, types.Field(i).Name)
 			*print += fmt.Sprintf("%s%s%s", breaker, strings.Repeat(" ", spaces), types.Field(i).Name)
 			convertToString(nextValue.Interface(), newPath, spaces+2, breaker, print)
@@ -44,6 +53,11 @@ func convertToString(obj interface{}, path string, spaces int, breaker string, p
 	case reflect.Array, reflect.Slice:
 		for i := 0; i < value.Len(); i++ {
 			nextValue := value.Index(i)
+
+			if !nextValue.CanInterface() {
+				return nil
+			}
+
 			newPath := fmt.Sprintf("[%d]", i)
 			*print += fmt.Sprintf("%s%s%s", breaker, strings.Repeat(" ", spaces), newPath)
 			convertToString(nextValue.Interface(), newPath, spaces+2, breaker, print)
@@ -53,6 +67,11 @@ func convertToString(obj interface{}, path string, spaces int, breaker string, p
 		for _, key := range value.MapKeys() {
 			var keyValue string
 			nextValue := value.MapIndex(key)
+
+			if !nextValue.CanInterface() {
+				return nil
+			}
+
 			convertToString(key.Interface(), "", 0, " ", &keyValue)
 			newPath := fmt.Sprintf("{%s}", strings.Trim(keyValue, " "))
 			*print += fmt.Sprintf("%s%s%s", breaker, strings.Repeat(" ", spaces), newPath)

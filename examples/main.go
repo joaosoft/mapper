@@ -11,6 +11,7 @@ import (
 var log = logger.NewLogDefault("mapper", logger.InfoLevel)
 
 type First struct {
+	zero  string            `json:"zero"`
 	One   string            `json:"one"`
 	Two   int               `json:"two"`
 	Three map[string]string `json:"three"`
@@ -31,6 +32,7 @@ type Second struct {
 
 func main() {
 	obj1 := First{
+		zero:  "zero",
 		One:   "one",
 		Two:   2,
 		Three: map[string]string{"a": "1", "b": "2"},

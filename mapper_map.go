@@ -34,6 +34,10 @@ func convertToMap(obj interface{}, path string, mapping map[string]interface{}, 
 		return "", nil
 	}
 
+	if !value.CanInterface() {
+		return "", nil
+	}
+
 	switch value.Kind() {
 	case reflect.Struct:
 
