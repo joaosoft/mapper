@@ -42,7 +42,7 @@ func convertToString(obj interface{}, path string, spaces int, breaker string, p
 			nextValue := value.Field(i)
 
 			if !nextValue.CanInterface() {
-				return nil
+				continue
 			}
 
 			newPath := fmt.Sprintf("%s%s", path, types.Field(i).Name)
@@ -55,7 +55,7 @@ func convertToString(obj interface{}, path string, spaces int, breaker string, p
 			nextValue := value.Index(i)
 
 			if !nextValue.CanInterface() {
-				return nil
+				continue
 			}
 
 			newPath := fmt.Sprintf("[%d]", i)
@@ -69,7 +69,7 @@ func convertToString(obj interface{}, path string, spaces int, breaker string, p
 			nextValue := value.MapIndex(key)
 
 			if !nextValue.CanInterface() {
-				return nil
+				continue
 			}
 
 			convertToString(key.Interface(), "", 0, " ", &keyValue)

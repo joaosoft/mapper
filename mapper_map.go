@@ -3,6 +3,7 @@ package mapper
 import (
 	"fmt"
 	"reflect"
+	"strings"
 )
 
 // Map ...
@@ -30,9 +31,7 @@ func convertToMap(obj interface{}, path string, mapping map[string]interface{}, 
 		}
 	}
 
-	if !value.CanInterface() {
-		return "", nil
-	}
+	fmt.Println(value)
 
 	if !value.CanInterface() {
 		return "", nil
@@ -53,10 +52,20 @@ func convertToMap(obj interface{}, path string, mapping map[string]interface{}, 
 			nextValue := value.Field(i)
 
 			if !nextValue.CanInterface() {
-				return "", nil
+				continue
 			}
 
-			newPath := fmt.Sprintf("%s%s", path, types.Field(i).Name)
+			jsonName, exists := types.Field(i).Tag.Lookup("json")
+
+			var name string
+			if exists {
+				split := strings.SplitN(jsonName, ",", 2)
+				name = split[0]
+			} else {
+				name = types.Field(i).Name
+			}
+
+			newPath := fmt.Sprintf("%s%s", path, name)
 			tmp, _ := convertToMap(nextValue.Interface(), newPath, mapping, add)
 			if len > 0 {
 				tmp += ","
@@ -77,7 +86,7 @@ func convertToMap(obj interface{}, path string, mapping map[string]interface{}, 
 			nextValue := value.Index(i)
 
 			if !nextValue.CanInterface() {
-				return "", nil
+				continue
 			}
 
 			newPath := fmt.Sprintf("%s[%d]", path, i)
@@ -101,7 +110,7 @@ func convertToMap(obj interface{}, path string, mapping map[string]interface{}, 
 			nextValue := value.MapIndex(key)
 
 			if !nextValue.CanInterface() {
-				return "", nil
+				continue
 			}
 
 			newPath := fmt.Sprintf("%s{", path)

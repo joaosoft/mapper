@@ -12,6 +12,7 @@ var log = logger.NewLogDefault("mapper", logger.InfoLevel)
 
 type First struct {
 	zero  string            `json:"zero"`
+	zero1 *string           `json:"zero1"`
 	One   string            `json:"one"`
 	Two   int               `json:"two"`
 	Three map[string]string `json:"three"`
