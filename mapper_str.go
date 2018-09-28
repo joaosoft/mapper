@@ -22,18 +22,18 @@ func convertToString(obj interface{}, path string, spaces int, breaker string, p
 	types := reflect.TypeOf(obj)
 	value := reflect.ValueOf(obj)
 
-	if value.Kind() == reflect.Ptr {
-		value = reflect.ValueOf(value).Elem()
+	if !value.CanInterface() {
+		return nil
+	}
+
+	if value.Kind() == reflect.Ptr && !value.IsNil() {
+		value = value.Elem()
 
 		if value.IsValid() {
 			types = value.Type()
 		} else {
 			return nil
 		}
-	}
-
-	if !value.CanInterface() {
-		return nil
 	}
 
 	switch value.Kind() {

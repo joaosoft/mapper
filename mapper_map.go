@@ -21,20 +21,18 @@ func convertToMap(obj interface{}, path string, mapping map[string]interface{}, 
 	types := reflect.TypeOf(obj)
 	value := reflect.ValueOf(obj)
 
-	if value.Kind() == reflect.Ptr {
-		value = reflect.ValueOf(value).Elem()
+	if !value.CanInterface() {
+		return "", nil
+	}
+
+	if value.Kind() == reflect.Ptr && !value.IsNil() {
+		value = value.Elem()
 
 		if value.IsValid() {
 			types = value.Type()
 		} else {
 			return "", nil
 		}
-	}
-
-	fmt.Println(value)
-
-	if !value.CanInterface() {
-		return "", nil
 	}
 
 	switch value.Kind() {
