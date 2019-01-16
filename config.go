@@ -2,7 +2,7 @@ package mapper
 
 // AppConfig ...
 type AppConfig struct {
-	Mapper MapperConfig `json:"mapper"`
+	Mapper *MapperConfig `json:"mapper"`
 }
 
 // MapperConfig ...
