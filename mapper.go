@@ -3,8 +3,8 @@ package mapper
 import (
 	"fmt"
 
-	logger "github.com/joaosoft/logger"
 	gomanager "github.com/joaosoft/go-manager"
+	logger "github.com/joaosoft/logger"
 )
 
 // Mapper ...
@@ -18,9 +18,10 @@ type Mapper struct {
 func NewMapper(options ...MapperOption) *Mapper {
 	pm := gomanager.NewManager(gomanager.WithRunInBackground(false))
 
-	mapper := &Mapper{}
-
-	mapper.Reconfigure(options...)
+	mapper := &Mapper{
+		pm:     pm,
+		config: &MapperConfig{},
+	}
 
 	if mapper.isLogExternal {
 		pm.Reconfigure(gomanager.WithLogger(log))
@@ -35,9 +36,10 @@ func NewMapper(options ...MapperOption) *Mapper {
 		level, _ := logger.ParseLevel(appConfig.Mapper.Log.Level)
 		log.Debugf("setting log level to %s", level)
 		log.Reconfigure(logger.WithLevel(level))
+		mapper.config = appConfig.Mapper
 	}
 
-	mapper.config = appConfig.Mapper
+	mapper.Reconfigure(options...)
 
 	return mapper
 }
