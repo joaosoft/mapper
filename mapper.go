@@ -19,7 +19,7 @@ func NewMapper(options ...MapperOption) *Mapper {
 
 	mapper := &Mapper{
 		pm:     pm,
-		config: &MapperConfig{},
+		config: &config.Mapper,
 	}
 
 	if mapper.isLogExternal {
