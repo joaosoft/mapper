@@ -2,8 +2,7 @@ package mapper
 
 import (
 	"fmt"
-
-	gomanager "github.com/joaosoft/go-manager"
+	"github.com/joaosoft/go-manager"
 )
 
 // AppConfig ...
@@ -19,13 +18,13 @@ type MapperConfig struct {
 }
 
 // NewConfig ...
-func NewConfig() (*MapperConfig, error) {
+func NewConfig() (*AppConfig, manager.IConfig, error) {
 	appConfig := &AppConfig{}
-	if _, err := gomanager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", GetEnv()), appConfig); err != nil {
-		log.Error(err.Error())
+	simpleConfig, err := manager.NewSimpleConfig(fmt.Sprintf("/config/app.%s.json", GetEnv()), appConfig)
 
-		return &MapperConfig{}, err
+	if err != nil {
+		log.Error(err.Error())
 	}
 
-	return appConfig.Mapper, nil
+	return appConfig, simpleConfig, err
 }
