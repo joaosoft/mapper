@@ -29,7 +29,7 @@ func NewMapper(options ...MapperOption) *Mapper {
 
 	// load configuration file
 	appConfig := &AppConfig{}
-	if simpleConfig, err := gomanager.NewSimpleConfig(fmt.Sprintf("/config.%s.json", getEnv()), appConfig); err != nil {
+	if simpleConfig, err := gomanager.NewSimpleConfig(fmt.Sprintf("/config.%s.json", GetEnv()), appConfig); err != nil {
 		log.Error(err.Error())
 	} else if appConfig.Mapper != nil {
 		pm.AddConfig("config_app", simpleConfig)
