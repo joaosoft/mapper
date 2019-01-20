@@ -26,7 +26,9 @@ func NewMapper(options ...MapperOption) *Mapper {
 		pm.Reconfigure(gomanager.WithLogger(log))
 	}
 
-	if err == nil {
+	if err != nil {
+		log.Error(err.Error())
+	} else {
 		mapper.pm.AddConfig("config_app", simpleConfig)
 		level, _ := logger.ParseLevel(config.Mapper.Log.Level)
 		log.Debugf("setting log level to %s", level)
