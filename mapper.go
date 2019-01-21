@@ -9,33 +9,34 @@ import (
 type Mapper struct {
 	config        *MapperConfig
 	pm            *gomanager.Manager
+	logger        logger.ILogger
 	isLogExternal bool
 }
 
 // NewMapper ...
 func NewMapper(options ...MapperOption) *Mapper {
 	config, simpleConfig, err := NewConfig()
-	pm := gomanager.NewManager(gomanager.WithRunInBackground(false))
 
-	mapper := &Mapper{
-		pm:     pm,
+	service := &Mapper{
+		pm:      gomanager.NewManager(gomanager.WithRunInBackground(false)),
+		logger: logger.NewLogDefault("mapper", logger.WarnLevel),
 		config: &config.Mapper,
 	}
 
-	if mapper.isLogExternal {
-		pm.Reconfigure(gomanager.WithLogger(log))
+	if service.isLogExternal {
+		service.pm.Reconfigure(gomanager.WithLogger(log))
 	}
 
 	if err != nil {
-		log.Error(err.Error())
+		service.logger.Error(err.Error())
 	} else {
-		mapper.pm.AddConfig("config_app", simpleConfig)
+		service.pm.AddConfig("config_app", simpleConfig)
 		level, _ := logger.ParseLevel(config.Mapper.Log.Level)
-		log.Debugf("setting log level to %s", level)
-		log.Reconfigure(logger.WithLevel(level))
+		service.logger.Debugf("setting log level to %s", level)
+		service.logger.Reconfigure(logger.WithLevel(level))
 	}
 
-	mapper.Reconfigure(options...)
+	service.Reconfigure(options...)
 
-	return mapper
+	return service
 }
