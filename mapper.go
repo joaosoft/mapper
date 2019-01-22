@@ -20,7 +20,7 @@ func NewMapper(options ...MapperOption) *Mapper {
 	service := &Mapper{
 		pm:      gomanager.NewManager(gomanager.WithRunInBackground(false)),
 		logger: logger.NewLogDefault("mapper", logger.WarnLevel),
-		config: &config.Mapper,
+		config: config.Mapper,
 	}
 
 	if service.isLogExternal {
@@ -29,7 +29,7 @@ func NewMapper(options ...MapperOption) *Mapper {
 
 	if err != nil {
 		service.logger.Error(err.Error())
-	} else {
+	} else if config.Mapper != nil {
 		service.pm.AddConfig("config_app", simpleConfig)
 		level, _ := logger.ParseLevel(config.Mapper.Log.Level)
 		service.logger.Debugf("setting log level to %s", level)
