@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"mapper"
+	"github.com/joaosoft/mapper"
 
-	logger "github.com/joaosoft/logger"
+	"github.com/joaosoft/logger"
 )
 
 var log = logger.NewLogDefault("mapper", logger.InfoLevel)
